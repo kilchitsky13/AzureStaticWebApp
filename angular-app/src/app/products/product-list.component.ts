@@ -1,32 +1,31 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Product } from '../core';
 
 @Component({
   selector: 'app-product-list',
-  template: `
-    <div *ngIf="!products?.length">
-      Loading data ...
-    </div>
-    <ul class="list">
-      <li
-        role="presentation"
-        *ngFor="let product of products; trackBy: trackByProduct; let i = index"
-      >
-        <div class="card">
-          <app-card-content
-            [name]="product.name"
-            [description]="product.description"
-          ></app-card-content>
-        </div>
-      </li>
-    </ul>
-  `,
+  templateUrl: `./product-list.component.html`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductListComponent {
   @Input() products: Product[];
+  @Output() deleted = new EventEmitter<Product>();
+  @Output() selected = new EventEmitter<Product>();
 
   trackByProduct(index: number, product: Product): number {
     return product.id;
+  }
+
+  selectProduct(product: Product) {
+    this.selected.emit(product);
+  }
+
+  deleteProduct(product: Product) {
+    this.deleted.emit(product);
   }
 }

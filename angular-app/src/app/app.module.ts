@@ -9,11 +9,6 @@ import { AboutComponent } from './about.component';
 import { RouterModule } from '@angular/router';
 import { externalModules } from './build-specific';
 import { declarations } from './core';
-import {
-  HttpClientInMemoryWebApiModule,
-  InMemoryDbService,
-} from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './in-memory-data.service';
 
 @NgModule({
   declarations: [AppComponent, AboutComponent, declarations],
@@ -22,14 +17,8 @@ import { InMemoryDataService } from './in-memory-data.service';
     HttpClientModule,
     RouterModule.forRoot(routes),
     AppStoreModule,
-    externalModules,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {
-      dataEncapsulation: false,
-      delay: 300,
-      passThruUnknownUrl: true,
-    }),
+    externalModules
   ],
-  providers: [{ provide: InMemoryDataService, useExisting: InMemoryDbService }],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

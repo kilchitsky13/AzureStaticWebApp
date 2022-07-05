@@ -2,18 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button-footer',
-  template: `
-    <button
-      class="link"
-      [ngClass]="className"
-      [attr.aria-label]="label"
-      tabindex="0"
-      [attr.data-id]="item.id"
-      (click)="handleClick()"
-    >
-      <i [ngClass]="iconClasses"></i> <span>{{ label }}</span>
-    </button>
-  `
+  templateUrl: './button-footer.component.html'
 })
 export class ButtonFooterComponent implements OnInit {
   @Input() label;

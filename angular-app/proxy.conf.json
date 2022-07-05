@@ -1,6 +1,7 @@
 {
   "/api": {
-    "target": "http://localhost:7071",
-    "secure": false
+    "target": "https://productstest12221.azurewebsites.net",
+    "secure": false,
+    "changeOrigin": true
   }
 }
