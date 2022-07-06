@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://productstest12221.azurewebsites.net",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
