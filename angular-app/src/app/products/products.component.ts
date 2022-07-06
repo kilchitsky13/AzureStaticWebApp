@@ -15,11 +15,10 @@ export class ProductsComponent implements OnInit {
   showModal = false;
 
   constructor(private productService: ProductService) {
-    this.products$ = productService.entities$;
   }
 
   ngOnInit() {
-    this.getProducts();
+    this.products$ = this.productService.getAll();
   }
 
   add(product: Product) {
@@ -74,6 +73,6 @@ export class ProductsComponent implements OnInit {
   }
 
   update(product: Product) {
-    this.productService.update(product);
+    this.productService.update(product).subscribe();
   }
 }

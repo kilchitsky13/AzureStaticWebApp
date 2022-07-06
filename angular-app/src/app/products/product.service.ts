@@ -1,15 +1,15 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../core';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, merge , of} from 'rxjs';
+import { Observable, of, Subject} from 'rxjs';
 import { catchError, retry, tap } from 'rxjs/operators';
 import { EntityActionOptions } from "@ngrx/data";
 
 @Injectable({ providedIn: 'root' })
 export class ProductService implements OnInit {
 
-  entities$: Observable<Product[]>;
+  entities$: Subject<Product[]> = new Subject();
+  entities: Product[];
   heroesUrl: string = "https://productstest12221.azurewebsites.net/api/products";
 
   constructor(private http: HttpClient) {
@@ -20,34 +20,50 @@ export class ProductService implements OnInit {
   }
 
   getAll(): Observable<Product[]>{ 
-    const prod = this.http.get<Product[]>(this.heroesUrl)
+    this.http.get<Product[]>(this.heroesUrl)
     .pipe(
-      tap(_ => this.log('fetched product')),
+      tap(value => {
+        this.entities = value;
+        this.log("getAll products");
+        this.entities$.next(this.entities);
+      }),
       catchError(this.handleError<Product[]>('getProducts', [])) // then handle the error
-    );
-
-    this.entities$ = prod;
-    return prod;
+    ).subscribe();
+    return this.entities$;
   }
 
   delete(id: number): Observable<Product>{    
     const url = `${this.heroesUrl}/${id}`;
     return this.http.delete<Product>(url).pipe(
-      tap(_ => this.log(`deleted Product id=${id}`)),
+      tap(_ => {
+        this.log(`deleted Product id=${id}`);
+        this.entities = this.entities.filter(x => x.id !== id);
+        this.entities$.next(this.entities);    
+      }),
       catchError(this.handleError<Product>('deleteProduct'))
     );
   }
 
   add(product: Product) : Observable<Product>{    
     return this.http.post<Product>(this.heroesUrl, product).pipe(
-      tap((newProduct: Product) => this.log(`added product w/ id=${newProduct.id}`)),
+      tap((newProduct: Product) => {
+        this.log(`added product w/ id=${newProduct.id}`);
+        this.entities = [...this.entities, newProduct];
+        this.entities$.next(this.entities);    
+      }),
       catchError(this.handleError<Product>('addProduct'))
     );
   }
 
   update(product: Product): Observable<any>{    
-    return this.http.put(this.heroesUrl, product).pipe(
-      tap(_ => this.log(`updated product id=${product.id}`)),
+    const url = `${this.heroesUrl}/${product.id}`;
+    return this.http.put(url, product).pipe(
+      tap(_ => {
+        this.log(`updated product id=${product.id}`)
+        const i = this.entities.findIndex(x => x.id === product.id);
+        this.entities[i] = product;
+        this.entities$.next([...this.entities]);    
+      }),
       catchError(this.handleError<any>('updateProduct'))
     );
   }
