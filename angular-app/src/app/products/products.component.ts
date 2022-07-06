@@ -23,7 +23,7 @@ export class ProductsComponent implements OnInit {
   }
 
   add(product: Product) {
-    this.productService.add(product, {isOptimistic: false});
+    this.productService.add(product).subscribe(value => console.log(value));
   }
 
   askToDelete(product: Product) {
@@ -57,7 +57,7 @@ export class ProductsComponent implements OnInit {
   }
 
   getProducts() {
-    this.productService.getAll();
+    this.products$ = this.productService.getAll();
     this.clear();
   }
 
