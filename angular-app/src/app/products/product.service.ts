@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, throwError, of} from 'rxjs';
+import { Observable, merge , of} from 'rxjs';
 import { catchError, retry, tap } from 'rxjs/operators';
 import { EntityActionOptions } from "@ngrx/data";
 
@@ -30,19 +30,26 @@ export class ProductService implements OnInit {
     return prod;
   }
 
-  delete(id: number){    
-    return null;//this.http.delete<Product>(this.configUrl, id);
+  delete(id: number): Observable<Product>{    
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.delete<Product>(url).pipe(
+      tap(_ => this.log(`deleted Product id=${id}`)),
+      catchError(this.handleError<Product>('deleteProduct'))
+    );
   }
 
   add(product: Product) : Observable<Product>{    
     return this.http.post<Product>(this.heroesUrl, product).pipe(
-      tap((newProduct: Product) => this.log(`added product w/ id=${product.id}`)),
+      tap((newProduct: Product) => this.log(`added product w/ id=${newProduct.id}`)),
       catchError(this.handleError<Product>('addProduct'))
     );
   }
 
-  update(product: Product){    
-    return null;//this.http.delete<Product>(this.configUrl, id);
+  update(product: Product): Observable<any>{    
+    return this.http.put(this.heroesUrl, product).pipe(
+      tap(_ => this.log(`updated product id=${product.id}`)),
+      catchError(this.handleError<any>('updateProduct'))
+    );
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
