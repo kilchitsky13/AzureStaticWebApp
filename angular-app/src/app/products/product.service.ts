@@ -2,10 +2,9 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../core';
 import { Observable, of, Subject} from 'rxjs';
-import { catchError, retry, tap } from 'rxjs/operators';
-import { EntityActionOptions } from "@ngrx/data";
+import { catchError, tap } from 'rxjs/operators';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class ProductService implements OnInit {
 
   entities$: Subject<Product[]> = new Subject();

@@ -33,6 +33,7 @@
               "src/styles.scss"
             ],
             "scripts": [],
+            "extraWebpackConfig": "webpack.config.js",
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
@@ -78,7 +79,9 @@
           "builder": "ngx-build-plus:dev-server",
           "options": {
             "browserTarget": "angular-app:build",
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "proxy.conf.json",
+            "extraWebpackConfig": "webpack.config.js",
+            "port": 4210
           },
           "configurations": {
             "production": {
@@ -102,7 +105,8 @@
             "karmaConfig": "src/karma.conf.js",
             "styles": ["src/styles.scss"],
             "scripts": [],
-            "assets": ["src/favicon.ico", "src/assets"]
+            "assets": ["src/favicon.ico", "src/assets"],
+            "extraWebpackConfig": "webpack.config.js"
           }
         },
         "lint": {
